@@ -1,0 +1,72 @@
+#!/bin/bash
+#BERNARDO SANCHEZ MARTINEZ
+
+#Carga entorno con variables por base de datos
+#set -x
+echo "Base de datos activas:"
+#IMprime las bases de datos activas
+ps -ef|grep smon|grep -v grep|sed 's/^.*smon_//'|grep -v "//"
+
+if [[ -n $1 ]];then
+BASE=$1
+else
+
+echo "Ingrese base de datos:"
+read BASE
+fi
+
+ORAHOME=$(cat /etc/oratab | grep -w $BASE | cut -d ":" -f 2 | cut -d " " -f 2)
+ORAVERSION=$(cat /etc/oratab | grep -w $BASE | cut -d "/" -f 4)
+
+export ORACLE_HOME=$ORAHOME
+#export ORACLE_HOME
+export ORACLE_SID=$BASE
+#export ORACLE_SID
+ver=$ORAVERSION
+
+
+#ORACLE_HOME=/u20/app/oracle/product/11.2.0.3/db1
+#ORACLE_SID=afiuat11g
+#export ORACLE_HOME ORACLE_SID
+
+stty erase ^?
+PATH=/usr/bin:/etc:/usr/sbin:/usr/ucb:/usr/bin/X11:/sbin
+
+alias oh='cd $ORACLE_HOME'
+alias ll="ls -lrtF"
+
+TH=$ORACLE_HOME/bin:$ORACLE_HOME/opmn/bin:$ORACLE_HOME/jdk/bin:$PATH
+export PATH=$PATH:/usr/bin:/etc:/usr/sbin:/usr/ucb:/usr/bin/X11:/sbin:$HOME/scripts/:$ORACLE_HOME/bin
+
+PATH=$ORACLE_HOME/bin:$ORACLE_HOME/opmn/bin:$ORACLE_HOME/jdk/bin:/product/oracle/OPatch/:$PATH
+PS1=`uname -n`.$LOGNAME.$ORACLE_SID'$ '
+
+PATH=$PATH:/usr/bin:/etc:/usr/sbin:/usr/ucb:/usr/bin/X11:/sbin:/home/oracle/scripts
+
+LD_LIBRARY_PATH=$ORACLE_HOME/lib
+export PATH
+
+if [ -s "$MAIL" ]           # This is at Shell startup.  In normal
+then echo "$MAILMSG"        # operation, the Shell checks
+fi                          # periodically.
+
+export PATH
+export AIXTHREAD_SCOPE=S
+export PATH=$PATH:$ORACLE_HOME:$ORACLE_HOME/bin
+export NLS_LANG=AMERICAN_AMERICA.WE8ISO8859P1
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib
+export PS1=`uname -n`.$LOGNAME.$ver.$ORACLE_SID'$ '
+
+echo "Se establecieron los valores:"
+echo "ORACLE_HOME:";
+echo $ORACLE_HOME;
+echo "ORACLE_SID:";
+echo $ORACLE_SID;
+echo "Version:";
+echo $ver;
+
+alias ll='ls -lrt'
+
+#showdbs
+#exec /bin/sh
+bash
